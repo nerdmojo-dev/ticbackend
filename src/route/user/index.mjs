@@ -10,6 +10,7 @@ import EmailService from "../../utils/emailService.mjs";
 import config from "../../config/index.mjs";
 import xlsx from "xlsx";
 import bcrypt from "bcryptjs";
+import authMiddleware from "../../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 const upload = multer({
@@ -182,33 +183,14 @@ router.post("/loginUser",
 
 
 
-router.post("/changePassword",
+router.post("/changePassword", authMiddleware,
     async (req, res, next) => {
         try {
-            const authHeader = req.headers.authorization;
-            if (!authHeader || !authHeader.startsWith("Bearer ")) {
-                return res.status(401).json(
-                    ApplicationResponse.error(
-                        "Authorization header missing or malformed."
-                    )
-                );
-            }
 
-            const token = authHeader.split(" ")[1];
-            let decoded;
-            try {
-                decoded = jwt.verify(token, config.jwtSecret);
-            } catch (err) {
-                return res.status(401).json(
-                    ApplicationResponse.error(
-                        "Invalid or expired token."
-                    )
-                );
-            }
 
             const { oldPassword, newPassword } = req.body;
 
-            const user = await User.findById(decoded.id).select("+password");
+            const user = await User.findById(req.user._id).select("+password");
 
             if (!user) {
                 return res.status(404).json(
@@ -237,11 +219,29 @@ router.post("/changePassword",
                     "Password changed successfully."
                 )
             );
-                
+
 
         } catch (err) {
             next(err);
         }
     });
 
-export default router;
+router.get("/getRefreshToken", authMiddleware, async (req, res, next) => {
+    const token = jwt.sign(
+        { id: req.user._id, role: req.user.role, employeeId: req.user.employeeId, },
+        config.jwtSecret,
+        { expiresIn: "1h" }
+    );
+
+    res.json(
+        ApplicationResponse.success(
+            {
+                token
+            },
+            "Token refreshed successfully."
+        )
+    );
+
+});
+
+    export default router;
