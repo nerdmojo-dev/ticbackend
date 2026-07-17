@@ -4,13 +4,13 @@ import { dbLog } from './logHelper.mjs';
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(config.dbUrl, {
-      dbName: config.dbName, // Optional if already in URI
-    });
+    console.log("Connecting to MongoDB...:"+config.dbUrl);
+    const conn = await mongoose.connect(config.dbUrl);
 
     dbLog(`Db Connected: ${conn.connection.host}`);
   } catch (error) {
-    dbLog("Db Connection Error:", error.message);
+    dbLog("Db Connection Error:", error);
+    process.exit(1); // Exit process with failure
   }
 };
 
