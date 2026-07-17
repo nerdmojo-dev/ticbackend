@@ -74,6 +74,10 @@ const userSchema = new mongoose.Schema(
             default: 0,
             select: false
         },
+        isFirstLogin: {
+            type: Boolean,
+            default: true
+        },
 
         accountLocked: {
             type: Boolean,

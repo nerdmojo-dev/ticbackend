@@ -149,6 +149,7 @@ router.post("/loginUser",
             // Reset login attempts on successful login
             user.loginAttempts = 0;
             user.lastLogin = new Date();
+            user.isFirstLogin = false; 
             await user.save();
 
             const token = jwt.sign(
