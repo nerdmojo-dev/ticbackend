@@ -7,7 +7,7 @@ class ApplicationResponse {
     this.timestamp = new Date().toISOString();
   }
 
-  static success(message = "Success", data = null) {
+  static success(data = null,message = "Success" ) {
     return new ApplicationResponse(true, message, data);
   }
 
