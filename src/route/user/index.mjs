@@ -114,7 +114,7 @@ router.post("/loginUser",
             const user = await User.findOne({ employeeId }).select("+password +loginAttempts +accountLocked");
 
             if (!user) {
-                return res.status(401).json(
+                return res.status(402).json(
                     ApplicationResponse.error(
                         "Invalid userId"
                     )
@@ -131,7 +131,7 @@ router.post("/loginUser",
                 }
                 await user.save();
 
-                return res.status(401).json(
+                return res.status(402).json(
                     ApplicationResponse.error(
                         "Invalid password."
                     )
