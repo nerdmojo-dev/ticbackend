@@ -227,7 +227,7 @@ router.post("/changePassword", authMiddleware,
         }
     });
 
-router.get("/getRefreshToken", authMiddleware, async (req, res, next) => {
+router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
     const token = jwt.sign(
         { id: req.user._id, role: req.user.role, employeeId: req.user.employeeId, },
         config.jwtSecret,

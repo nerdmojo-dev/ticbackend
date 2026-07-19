@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.mjs";
+import ApplicationResponse from "../utils/ApplicationResponse.mjs";
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -7,9 +8,12 @@ const authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        message: "No token provided"
-      });
+      return res.status(401).json(
+        ApplicationResponse.error(
+          null,
+          "No token provided"
+        )
+      );
     }
 
     const token = authHeader.split(" ")[1];
@@ -24,9 +28,10 @@ const authMiddleware = async (req, res, next) => {
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({
-        message: "User not found"
-      });
+      return res.status(401).json(ApplicationResponse.error(
+        null,
+        "User not found"
+      ));
     }
 
     // Attach user to request
@@ -35,9 +40,10 @@ const authMiddleware = async (req, res, next) => {
     next();
 
   } catch (error) {
-    return res.status(401).json({
-      message: "Invalid or expired token"
-    });
+    return res.status(401).json(ApplicationResponse.error(
+      null,
+      "Invalid or expired token"
+    ));
   }
 };
 
