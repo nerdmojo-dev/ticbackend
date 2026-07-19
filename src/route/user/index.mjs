@@ -149,7 +149,6 @@ router.post("/loginUser",
             // Reset login attempts on successful login
             user.loginAttempts = 0;
             user.lastLogin = new Date();
-            user.isFirstLogin = false; 
             await user.save();
 
             const token = jwt.sign(
@@ -212,6 +211,7 @@ router.post("/changePassword", authMiddleware,
             }
 
             user.password = await bcrypt.hash(newPassword, 10);
+            user.isFirstLogin = false;
             await user.save();
 
             res.json(
@@ -226,6 +226,9 @@ router.post("/changePassword", authMiddleware,
             next(err);
         }
     });
+
+
+
 
 router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
     const token = jwt.sign(
@@ -245,4 +248,4 @@ router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
 
 });
 
-    export default router;
+export default router;
