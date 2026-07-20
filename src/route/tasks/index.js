@@ -13,7 +13,7 @@ router.post("/addtask",authMiddleware,  async (req, res, next) => {
         
         // Validate required fields
         if (!title || !description || !assignedTo || !dueDate) {
-            return res.status(400).json({ message: "All fields are required." });
+            return res.status(400).json(ApplicationResponse.error("All fields are required"));
         }
 
         // Create a new task
@@ -27,7 +27,7 @@ router.post("/addtask",authMiddleware,  async (req, res, next) => {
 
         await newTask.save();
 
-        res.status(201).json({ message: "Task created successfully.", task: newTask });
+        res.status(201).json(ApplicationResponse.success(newTask,"Task created successfully."));
     } catch (error) {
         serverLog("Error creating task:", error);
         next(error);
@@ -53,13 +53,13 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
       assignedTo: req.user._id
     });
 
-    res.json({
+    res.json(ApplicationResponse.success({
       page,
       offset,
       totalTasks,
       totalPages: Math.ceil(totalTasks / offset),
       tasks
-    });
+    },"Tasks fetched successfully"));
 
   } catch (error) {
     serverLog("Error fetching assigned tasks:", error);
@@ -74,13 +74,13 @@ router.post("/addComment",authMiddleware,  async (req, res, next) => {
         
         // Validate required fields
         if (!taskId || !message) {
-            return res.status(400).json({ message: "Task ID and message are required." });
+            return res.status(400).json(ApplicationResponse.error("Task ID and message are required."));
         }
 
         // Find the task and add the comment
         const task = await Task.findById(taskId);
         if (!task) {
-            return res.status(404).json({ message: "Task not found." });
+            return res.status(404).json(ApplicationResponse.error("Task not found."));
         }
 
         task.comments.push({
@@ -90,7 +90,7 @@ router.post("/addComment",authMiddleware,  async (req, res, next) => {
 
         await task.save();
 
-        res.status(201).json({ message: "Comment added successfully.", task });
+        res.status(201).json(ApplicationResponse.success(task,"Comment added successfully."));
     } catch (error) {
         serverLog("Error adding comment:", error);
         next(error);
