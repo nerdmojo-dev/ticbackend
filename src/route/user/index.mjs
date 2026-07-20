@@ -163,12 +163,21 @@ router.post("/loginUser",
                 { expiresIn: "7d" }
             );
 
+
+            const existing = await Task.findOne({
+                dueDate,
+                createdBy: req.user._id
+            });
+
             res.json(
                 ApplicationResponse.success(
                     {
                         token,
                         refreshToken,
-                        user
+                        user: {
+                            ...user,
+                            alreadyExistingTask: existing != null
+                        }
                     },
                     "Login successful."
                 )
