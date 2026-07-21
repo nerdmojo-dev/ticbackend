@@ -11,6 +11,7 @@ import config from "../../config/index.mjs";
 import xlsx from "xlsx";
 import bcrypt from "bcryptjs";
 import authMiddleware from "../../middleware/authMiddleware.mjs";
+import task from "../../models/task.mjs";
 
 const router = express.Router();
 const upload = multer({
@@ -170,8 +171,8 @@ router.post("/loginUser",
             const endOfDay = new Date();
             endOfDay.setHours(23, 59, 59, 999);
 
-            const existing = await Task.findOne({
-                createdBy: req.user._id,
+            const existing = await task.findOne({
+                createdBy: user._id,
                 createdAt: {
                     $gte: startOfDay,
                     $lte: endOfDay,
@@ -184,10 +185,8 @@ router.post("/loginUser",
                     {
                         token,
                         refreshToken,
-                        user: {
-                            ...user,
-                            alreadyExistingTask: existing != null
-                        }
+                        user,
+                        alreadyExistingTask: existing != null
                     },
                     "Login successful."
                 )
