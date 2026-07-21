@@ -15,10 +15,20 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
         if (!title || !description || !assignedTo || !dueDate) {
             return res.status(400).json(ApplicationResponse.error("All fields are required"));
         }
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
         const existing = await Task.findOne({
-            dueDate,
-            createdBy: req.user._id
+            createdBy: req.user._id,
+            createdAt: {
+                $gte: startOfDay,
+                $lte: endOfDay,
+            },
         });
+
 
         if (existing != null) return res.status(400).json(ApplicationResponse.error("Already submitted todays status"));
 

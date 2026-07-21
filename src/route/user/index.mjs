@@ -164,10 +164,20 @@ router.post("/loginUser",
             );
 
 
+            const startOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+
+            const endOfDay = new Date();
+            endOfDay.setHours(23, 59, 59, 999);
+
             const existing = await Task.findOne({
-                dueDate,
-                createdBy: req.user._id
+                createdBy: req.user._id,
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                },
             });
+
 
             res.json(
                 ApplicationResponse.success(
