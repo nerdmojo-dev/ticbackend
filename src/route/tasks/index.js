@@ -15,10 +15,10 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
         if (!title || !description || !assignedTo || !dueDate) {
             return res.status(400).json(ApplicationResponse.error("All fields are required"));
         }
-        const startOfDay = new Date();
+        const startOfDay = new Date(dueDate);
         startOfDay.setHours(0, 0, 0, 0);
 
-        const endOfDay = new Date();
+        const endOfDay = new Date(dueDate);
         endOfDay.setHours(23, 59, 59, 999);
 
         const existing = await Task.findOne({
@@ -55,18 +55,34 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const offset = parseInt(req.query.offset) || 10;
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+        const filter = {};
 
+        if (req.user.role !== "ADMIN") {
+            filter.createdBy = req.user._id;
+        }
+
+        if (startDate || endDate) {
+            filter.dueDate = {};
+
+            if (startDate) {
+                filter.dueDate.$gte = new Date(startDate);
+            }
+
+            if (endDate) {
+                filter.dueDate.$lte = new Date(endDate);
+            }
+        }
         const skip = (page - 1) * offset;
 
-        const tasks = await Task.find({
-            assignedTo: req.user._id
-        })
-            .sort({ dueDate: 1 }) // ascending due date (earliest first)
+        const tasks = await Task.find(filter)
+            .sort({ dueDate: -1 }) // Latest due date first
             .skip(skip)
             .limit(offset);
 
         const totalTasks = await Task.countDocuments({
-            assignedTo: req.user._id
+            createdBy: req.user._id
         });
 
         res.json(ApplicationResponse.success({

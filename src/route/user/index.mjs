@@ -83,7 +83,7 @@ router.post("/registerUser", upload.single("csvFile"),
 
                     fs.unlinkSync(req.file.path);
 
-                    res.json({
+                    res.status(200).json({
                         success: true,
                         totalRecords: data.length,
                         inserted: result.upsertedCount,
@@ -122,6 +122,14 @@ router.post("/loginUser",
                 );
             }
 
+            if (user.accountLocked) {
+                return res.status(402).json(
+                    ApplicationResponse.error(
+                        "Account is locked due to multiple failed login attempts."
+                    )
+                );
+            }
+
             // Assuming you have a method to compare passwords
             const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -139,13 +147,7 @@ router.post("/loginUser",
                 );
             }
 
-            if (user.accountLocked) {
-                return res.status(403).json(
-                    ApplicationResponse.error(
-                        "Account is locked due to multiple failed login attempts."
-                    )
-                );
-            }
+            
 
             // Reset login attempts on successful login
             user.loginAttempts = 0;
@@ -211,7 +213,7 @@ router.post("/changePassword", authMiddleware,
             const user = await User.findById(req.user._id).select("+password");
 
             if (!user) {
-                return res.status(404).json(
+                return res.status(402).json(
                     ApplicationResponse.error(
                         "User not found."
                     )
@@ -221,7 +223,7 @@ router.post("/changePassword", authMiddleware,
             const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
             if (!isOldPasswordValid) {
-                return res.status(400).json(
+                return res.status(402).json(
                     ApplicationResponse.error(
                         "Old password is incorrect."
                     )
@@ -232,7 +234,7 @@ router.post("/changePassword", authMiddleware,
             user.isFirstLogin = false;
             await user.save();
 
-            res.json(
+            res.status(200).json(
                 ApplicationResponse.success(
                     null,
                     "Password changed successfully."
