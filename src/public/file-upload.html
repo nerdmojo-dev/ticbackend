@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/fileUpload.js" defer></script>
+    <script src="/js/util.js" defer></script>
+    <style>
+        .drop-zone.dragover {
+            border-color: #4F46E5;
+            background: #EEF2FF;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center overflow-hidden">
+
+    <!-- Background Blobs -->
+    <div class="absolute w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-30 top-10 left-10"></div>
+    <div class="absolute w-96 h-96 bg-purple-600 rounded-full blur-3xl opacity-30 bottom-10 right-10"></div>
+
+    <!-- Glass Card -->
+    <div class="relative w-full max-w-[800px] mx-4">
+
+        <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-10">
+
+            <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8">
+
+
+
+
+                <div class="flex justify-between items-start px-6 py-5 border-b">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-20 h-20 rounded-xl border flex items-center justify-center text-indigo-600">
+                            <img src="/fileUpload.png" class="w-full h-full object-cover" alt="fileupload-icon"/>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-xl font-semibold text-black">
+                                Upload CSV
+                            </h2>
+
+                            <p class="text-sm text-black-500 mt-1">
+                                Upload a CSV to quickly import users and attributes.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Upload Area -->
+
+                <div class="p-6">
+
+                    <div id="dropZone"
+                        class="drop-zone border-2 border-dashed rounded-lg h-[320px] flex flex-col items-center justify-center transition">
+
+                        <!-- Upload Icon -->
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-400" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+
+                        </svg>
+
+                        <p class="text-gray-500 mt-4">
+                            Drag your file here to upload
+                        </p>
+
+                        <div class="flex gap-3 mt-6 md:flex-row flex-col">
+
+                            <button id="browseBtn"
+                                class="bg-yellow-400 hover:bg-yellow-500 px-5 py-2 rounded-md font-medium shadow">
+
+                                Browse Files
+
+                            </button>
+
+                            <button id="downloadSampleBtn" class="border px-5 py-2 rounded-md hover:bg-gray-50">
+
+                                Download Sample CSV
+
+                            </button>
+
+                        </div>
+
+                        <input type="file" id="fileInput" accept=".csv,.xlsx" hidden>
+
+                        <p id="fileName" class="mt-6 text-white font-medium hidden">
+                        </p>
+
+
+                        <button id="importBtn" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hidden mt-2">
+                            Import Users
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+</body>
+
+</html>

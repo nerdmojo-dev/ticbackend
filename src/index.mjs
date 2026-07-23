@@ -17,17 +17,15 @@ app.use(morganLogger); // Use the morgan logger middleware
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, "public")));
-
-
 routes(app);
 
-app.listen(config.port,()=>{
+
+app.listen(config.port, () => {
     console.log(config);
     appLog(`Server is running on port ${config.port}`);
     dbLog(`Initiating db connection...`);
     connectDB();
 
-    
+
 })

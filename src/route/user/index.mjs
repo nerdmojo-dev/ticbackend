@@ -18,11 +18,15 @@ const upload = multer({
     dest: "uploads/"
 });
 
-router.post("/registerUser", upload.single("csvFile"),
+router.post("/registerUser", authMiddleware,upload.single("csvFile"),
     async (req, res, next) => {
         try {
             if (!req.file) {
                 throw new Error("CSV file is required.");
+            }
+
+            if (req.user.role !== "ADMIN") {
+                throw new Error("Admin token required");
             }
             console.log(req.file.originalname);
             console.log(req.file.path);
@@ -147,7 +151,7 @@ router.post("/loginUser",
                 );
             }
 
-            
+
 
             // Reset login attempts on successful login
             user.loginAttempts = 0;

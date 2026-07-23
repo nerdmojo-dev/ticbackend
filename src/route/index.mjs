@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default (app) => {
-    
+
 
 
     app.get("/api/v1/health", healthCheck);
@@ -17,8 +17,17 @@ export default (app) => {
     app.use("/api/v1/auth", userAuth);
     app.use("/api/v1/tasks", taskRoutes);
 
-    app.get("/fileUpload", (req, res) => {
-        res.sendFile(path.join(path.resolve(__dirname,".."), "public", "fileUpload.html"));
+
+    app.get("/admin/login", (req, res) => {
+        res.sendFile(path.join(__dirname,"..", "public", "admin-login.html"));
+    });
+
+    app.get("/admin/home", (req, res) => {
+        res.sendFile(path.join(__dirname,"..", "public", "admin-home.html"));
+    });
+
+    app.get("/admin/empUpload", (req, res) => {
+        res.sendFile(path.join(__dirname,"..", "public", "file-upload.html"));
     });
 
     app.use((req, res, next) => {

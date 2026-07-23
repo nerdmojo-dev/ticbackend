@@ -37,8 +37,9 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
             title,
             description,
             assignedTo,
+            status:"Completed",
             dueDate,
-            createdBy: req.user._id // Assuming you have user authentication and req.user is available
+            createdBy: req.user._id,
         });
 
         await newTask.save();
@@ -77,19 +78,17 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
         const skip = (page - 1) * offset;
 
         const tasks = await Task.find(filter)
+            .populate("createdBy")
             .sort({ dueDate: -1 }) // Latest due date first
             .skip(skip)
             .limit(offset);
-
-        const totalTasks = await Task.countDocuments({
-            createdBy: req.user._id
-        });
+        const countOfDocuments=await Task.countDocuments(filter);
 
         res.json(ApplicationResponse.success({
             page,
             offset,
-            totalTasks,
-            totalPages: Math.ceil(totalTasks / offset),
+            countOfDocuments,
+            totalPages: Math.ceil(countOfDocuments / offset),
             tasks
         }, "Tasks fetched successfully"));
 
