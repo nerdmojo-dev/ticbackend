@@ -137,4 +137,46 @@ router.post("/addComment", authMiddleware, async (req, res, next) => {
     }
 });
 
+
+router.put("/editTask/:taskId", authMiddleware, async (req, res, next) => {
+    try {
+        const { taskId } = req.params;
+        const { title, description } = req.body;
+
+        // Validate required fields
+        if (!title || !description) {
+            return res
+                .status(400)
+                .json(ApplicationResponse.error("Title and description are required"));
+        }
+
+        // Find the task belonging to the logged-in user
+        const task = await Task.findOne({
+            _id: taskId,
+            createdBy: req.user._id,
+        });
+
+        if (!task) {
+            return res
+                .status(404)
+                .json(ApplicationResponse.error("Task not found"));
+        }
+
+        // Update allowed fields
+        task.title = title;
+        task.description = description;
+        task.isEdited = true;
+
+        await task.save();
+        await task.populate("createdBy");
+
+        return res
+            .status(200)
+            .json(ApplicationResponse.success(task, "Task updated successfully."));
+    } catch (error) {
+        serverLog("Error updating task:", error);
+        next(error);
+    }
+});
+
 export default router;

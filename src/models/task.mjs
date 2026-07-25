@@ -76,6 +76,10 @@ const taskSchema = new mongoose.Schema(
                 },
             }
         ],
+        isEdited:{
+            type: Boolean,
+            default: false,
+        },
 
         isDeleted: {
             type: Boolean,
