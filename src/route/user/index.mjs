@@ -18,7 +18,7 @@ const upload = multer({
     dest: "uploads/"
 });
 
-router.post("/registerUser", authMiddleware,upload.single("csvFile"),
+router.post("/registerUser", authMiddleware, upload.single("csvFile"),
     async (req, res, next) => {
         try {
             if (!req.file) {
@@ -271,5 +271,125 @@ router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
     );
 
 });
+
+
+router.get("/getUserList", authMiddleware, async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const offset = parseInt(req.query.offset) || 10;
+    if (req.user.role !== "ADMIN") {
+        throw new Error("Admin token required");
+    }
+    const skip = (page - 1) * offset;
+    const userList = await User.find()
+        .select(" +loginAttempts +accountLocked")
+        .sort({ fullName: 1 })
+        .skip(skip)
+        .limit(offset);
+    const countOfDocuments = await User.countDocuments();
+
+
+    res.json(
+        ApplicationResponse.success(
+            {
+                page,
+                offset,
+                countOfDocuments,
+                totalPages: Math.ceil(countOfDocuments / offset),
+                userList
+            },
+            "Users fetched successfully."
+        )
+    );
+
+});
+
+
+router.get(
+    "/users/:id/reset-password",
+    authMiddleware,
+    async (req, res) => {
+
+        if (req.user.role !== "ADMIN") {
+            throw new Error("Admin token required");
+        }
+
+
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            throw new Error("User not found")
+
+        }
+
+        const temporaryPassword = `${user.employeeId}#${user.fullName.replace(/\s+/g, " ") // Replace multiple spaces with one
+            .split(" ")
+            .join(".").toLowerCase()}`;
+
+        const hashedPassword = await bcrypt.hash(temporaryPassword, 10);
+
+        user.password = hashedPassword;
+        user.loginAttempts = 0;
+        user.isFirstLogin = true;
+        user.accountLocked = false;
+
+        await user.save();
+
+        return res.status(200).json(ApplicationResponse.success(temporaryPassword, "Password Reset successfully"));
+
+
+    }
+);
+
+
+router.get(
+    "/users/:id/unlock",
+    authMiddleware,
+    async (req, res) => {
+        if (req.user.role !== "ADMIN") {
+            throw new Error("Admin token required");
+        }
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            throw new Error("User not found")
+        }
+
+        user.accountLocked = false;
+        user.loginAttempts = 0;
+
+        await user.save();
+
+        return res.status(200).json(ApplicationResponse.success(null, "Account unlocked successfully"));
+    }
+);
+
+
+router.get(
+    "/users/:id/lock",
+    authMiddleware,
+    async (req, res) => {
+        if (req.user.role !== "ADMIN") {
+            throw new Error("Admin token required");
+        }
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            throw new Error("User not found")
+        }
+
+        user.accountLocked = true;
+        user.loginAttempts = 0;
+
+        await user.save();
+
+        return res.status(200).json(ApplicationResponse.success(null, "Account locked successfully"));
+    }
+);
 
 export default router;

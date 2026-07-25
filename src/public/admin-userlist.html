@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="/js/util.js" defer></script>
+
+    <script src="/js/admin-userList.js" defer></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center overflow-hidden">
+
+    <!-- Background Blobs -->
+    <div class="absolute w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-30 top-10 left-10"></div>
+    <div class="absolute w-96 h-96 bg-purple-600 rounded-full blur-3xl opacity-30 bottom-10 right-10"></div>
+
+    <!-- Glass Card -->
+    <div class="relative w-full max-w-[75%] mx-4">
+
+        <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-10">
+
+
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-8 
+            backdrop-blur-xl bg-white/10 border border-white/20 
+            rounded-2xl p-5 shadow-lg gap-4">
+
+                <!-- Title -->
+                <div>
+                    <h1 class="text-3xl font-bold text-white">
+                        User List
+                    </h1>
+                   
+                </div>
+
+            </div>
+
+            <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8">
+
+                <div class="overflow-auto rounded-xl h-[400px]">
+
+                    <table class="min-w-full text-white">
+                        <thead class="bg-white/10">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+
+                                <th class="px-6 py-4 text-left">Employee Id</th>
+                                <th class="px-6 py-4 text-left">Full Name</th>
+                                <th class="px-6 py-4 text-left">Department</th>
+                                <th class="px-6 py-4 text-left">Account Locked</th>
+                                <th class="px-6 py-4 text-center">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tableBody">
+                            <td colspan="6"
+                                class="w-full py-3 col-span-full text-center text-gray-300 bg-white/5 rounded-lg">
+                                Loading...
+                            </td>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="flex justify-between items-center mt-6">
+
+                    <button id="prevBtn"
+                        class="px-5 py-2  bg-red-500 disabled:bg-slate-700 rounded-lg text-white disabled:opacity-40">
+                        Previous
+                    </button>
+
+                    <span id="pageNo" class="text-white">
+                        Page 1
+                    </span>
+
+                    <button id="nextBtn"
+                        class="px-5 py-2 bg-cyan-500 rounded-lg text-white disabled:opacity-40 disabled:bg-slate-700">
+                        Next
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

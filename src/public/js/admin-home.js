@@ -15,6 +15,11 @@ const limit = 5;
 
 let page = 1;
 
+function resetAndLoad(){
+    page=1;
+    loadFiles();
+}
+
 async function loadFiles() {
 
     const startDate = document.getElementById("startDate").value;
@@ -39,7 +44,9 @@ document.getElementById("filterBtn").addEventListener("click", () => {
     window.location.href = "/admin/empUpload";
 });
 
-
+document.getElementById("userListBtn").addEventListener("click", () => {
+    window.location.href = "/admin/userList";
+});
 document.getElementById("exportBtn").addEventListener("click", exportExcel);
 
 
@@ -126,7 +133,7 @@ function renderTable(tasks) {
 
             tbody.innerHTML += `
             <tr class="border-b border-white/10 hover:bg-white/5">
-                <td class="px-6 py-4">${index + 1}</td>
+                <td class="px-6 py-4">${(index + 1)+(page-1)*limit}</td>
                 <td class="px-6 py-4">${task.createdBy.fullName}</td>
                 <td class="px-6 py-4">${task.title}</td>
                 <td class="px-6 py-4">${task.description}</td>

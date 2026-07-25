@@ -37,8 +37,8 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
             title,
             description,
             assignedTo,
-            status:"Completed",
-            dueDate,
+            status: "Completed",
+            dueDate:startOfDay,
             createdBy: req.user._id,
         });
 
@@ -68,13 +68,21 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
             filter.dueDate = {};
 
             if (startDate) {
-                filter.dueDate.$gte = new Date(startDate);
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                filter.dueDate.$gte = start;
+
             }
 
             if (endDate) {
-                filter.dueDate.$lte = new Date(endDate);
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                filter.dueDate.$lte = end;
             }
         }
+
+
+        console.log(filter);
         const skip = (page - 1) * offset;
 
         const tasks = await Task.find(filter)
@@ -82,7 +90,7 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
             .sort({ dueDate: -1 }) // Latest due date first
             .skip(skip)
             .limit(offset);
-        const countOfDocuments=await Task.countDocuments(filter);
+        const countOfDocuments = await Task.countDocuments(filter);
 
         res.json(ApplicationResponse.success({
             page,
