@@ -23,7 +23,7 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
 
         const existing = await Task.findOne({
             createdBy: req.user._id,
-            createdAt: {
+            dueDate: {
                 $gte: startOfDay,
                 $lte: endOfDay,
             },
@@ -44,8 +44,7 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
 
         await newTask.save();
 
-        newTask.populate("createdBy");
-
+        await newTask.populate("createdBy");
         res.status(201).json(ApplicationResponse.success(newTask, "Task created successfully."));
     } catch (error) {
         serverLog("Error creating task:", error);
