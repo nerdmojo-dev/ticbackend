@@ -44,6 +44,8 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
 
         await newTask.save();
 
+        newTask.populate("createdBy");
+
         res.status(201).json(ApplicationResponse.success(newTask, "Task created successfully."));
     } catch (error) {
         serverLog("Error creating task:", error);
