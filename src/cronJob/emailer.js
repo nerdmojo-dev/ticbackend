@@ -34,13 +34,12 @@ async function generateTodaysTaskReport() {
     end.setHours(23, 59, 59, 999);
 
     const tasks = await Task.find({
-        createdDate: {
+        dueDate: {
             $gte: start,
             $lte: end,
         },
     })
         .populate("createdBy");
-
 
 
 
@@ -53,10 +52,10 @@ async function generateTodaysTaskReport() {
         { header: "Task ID", key: "id", width: 30 },
         { header: "Title", key: "title", width: 40 },
         { header: "Description", key: "description", width: 60 },
-        { header: "Assigned To", key: "assignedTo", width: 30 },
+        { header: "Status Filed By", key: "createdBy", width: 30 },
+        { header: "Employee Id", key: "empId", width: 30 },
         { header: "Status", key: "status", width: 20 },
-        { header: "Due Date", key: "dueDate", width: 25 },
-        { header: "Created Date", key: "createdDate", width: 25 },
+        { header: "Due Date", key: "dueDate", width: 25 }
     ];
 
     tasks.forEach(task => {
@@ -64,10 +63,12 @@ async function generateTodaysTaskReport() {
             id: task._id.toString(),
             title: task.title,
             description: task.description,
-            assignedTo: task.assignedTo?.fullName ?? "",
+            createdBy: task.createdBy?.fullName ?? "",
+            empId: task.createdBy?.employeeId ?? "",
             status: task.status,
-            dueDate: task.dueDate,
-            createdDate: task.createdDate,
+            dueDate: task.dueDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+            }),
         });
     });
 
@@ -92,12 +93,12 @@ console.log(process.env);
 
 async function sendMail() {
     const report = await generateTodaysTaskReport();
-
+    
     try {
 
         const info = await transporter.sendMail({
             from: '"Automation" <noreply@ticbackendautomation.in>',
-            to: process.env.TO_EMAIL,
+            to: process.env.TO_EMAIL.split(",").map(email => email.trim()),
             subject: `Today's Task Report`,
 
             html: `
@@ -117,17 +118,8 @@ async function sendMail() {
     } catch (err) {
         console.error("Failed to send mail:", err);
     } finally {
-        await fs.unlink(report);
-        process.exit(1);
+        if(report) await fs.unlink(report);
     }
 }
 
-// Every day at 9:00 AM
-// cron.schedule("0 9 * * *", async () => {
-//     console.log("Running scheduled mail...");
-//     await sendMail();
-// });
-
-sendMail();
-
-console.log("Auto mail service started.");
+export default sendMail;

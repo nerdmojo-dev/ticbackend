@@ -5,18 +5,23 @@ import ApplicationResponse from "../utils/ApplicationResponse.mjs";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import errorHandler from "../errorHandler/index.mjs";
+import sendMail from "../cronJob/emailer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default (app) => {
 
-
+    // app.use(responseLogger);
 
     app.get("/api/v1/health", healthCheck);
 
     app.use("/api/v1/auth", userAuth);
     app.use("/api/v1/tasks", taskRoutes);
+    app.get("/api/v1/emailer", async(req,res,next)=>{
+        await sendMail();
+        return res.status(200).json({"message":"email sent"});
+    });
 
 
     app.get("/admin/login", (req, res) => {

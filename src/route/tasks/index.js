@@ -37,8 +37,8 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
             title,
             description,
             assignedTo,
-            status: "Completed",
-            dueDate:startOfDay,
+            status: status??"Completed",
+            dueDate:dueDate,
             createdBy: req.user._id,
         });
 
@@ -81,9 +81,6 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
                 filter.dueDate.$lte = end;
             }
         }
-
-
-        console.log(filter);
         const skip = (page - 1) * offset;
 
         const tasks = await Task.find(filter)
@@ -141,7 +138,7 @@ router.post("/addComment", authMiddleware, async (req, res, next) => {
 router.put("/editTask/:taskId", authMiddleware, async (req, res, next) => {
     try {
         const { taskId } = req.params;
-        const { title, description } = req.body;
+        const { title, description,status } = req.body;
 
         // Validate required fields
         if (!title || !description) {
@@ -166,6 +163,7 @@ router.put("/editTask/:taskId", authMiddleware, async (req, res, next) => {
         task.title = title;
         task.description = description;
         task.isEdited = true;
+        task.status=status??"Completed";
 
         await task.save();
         await task.populate("createdBy");
