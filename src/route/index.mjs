@@ -18,8 +18,8 @@ export default (app) => {
 
     app.use("/api/v1/auth", userAuth);
     app.use("/api/v1/tasks", taskRoutes);
-    app.get("/api/v1/emailer", async(req,res,next)=>{
-        await sendMail();
+    app.get("/api/v1/emailer", (req,res,next)=>{
+        sendMail();
         return res.status(200).json({"message":"email sent"});
     });
 
