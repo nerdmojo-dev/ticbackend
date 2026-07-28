@@ -186,6 +186,14 @@ router.post("/loginUser",
             });
 
 
+            console.log({
+                createdBy: user._id,
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                },
+            });
+
             res.json(
                 ApplicationResponse.success(
                     {
