@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/addtask", authMiddleware, async (req, res, next) => {
     try {
-        const { title, description, assignedTo, dueDate } = req.body;
+        const { title, description, assignedTo, dueDate,status } = req.body;
 
         // Validate required fields
         if (!title || !description || !assignedTo || !dueDate) {
