@@ -36,6 +36,10 @@ export default (app) => {
         res.sendFile(path.join(__dirname,"..", "public", "file-upload.html"));
     });
 
+    app.get("/appDownload", (req, res) => {
+        res.sendFile(path.join(__dirname,"..", "public", "app-download.html"));
+    });
+
     app.get("/admin/userList", (req, res) => {
         res.sendFile(path.join(__dirname,"..", "public", "admin-userlist.html"));
     });

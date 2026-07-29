@@ -40,7 +40,14 @@ async function performLogin(e) {
 
 
 
+        if (data.data.user.role != "ADMIN") {
+            document.getElementById("errorText").innerText = "Redirecting to app download page";
+            document.getElementById("errorBuider").classList.remove("invisible");
+            window.location.href = "/appDownload"; // Redirect after 3 seconds
 
+
+            return;
+        }
 
         console.log(data);
 

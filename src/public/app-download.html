@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download App</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 overflow-x-hidden">
+
+    <!-- Background -->
+    <div class="absolute w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-30 top-10 left-10"></div>
+    <div class="absolute w-96 h-96 bg-purple-600 rounded-full blur-3xl opacity-30 bottom-10 right-10"></div>
+
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-10">
+
+            <!-- Header -->
+            <div
+                class="flex flex-col md:flex-row justify-between items-center mb-10 backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6">
+
+                <div>
+                    <h1 class="text-4xl font-bold text-white">
+                        Tic Insight
+                    </h1>
+
+                    <p class="text-gray-300 mt-2">
+                        Download the latest Android application
+                    </p>
+                </div>
+
+                <div class="mt-5 md:mt-0">
+
+                    <button
+                        class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium transition shadow-lg hover:shadow-blue-500/30">
+
+                        Latest Version v1.0.0
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Content -->
+
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- Left -->
+
+                <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-xl">
+
+                    <h2 class="text-2xl font-semibold text-white mb-4">
+                        Download APK
+                    </h2>
+
+                    <p class="text-gray-300 leading-7 mb-8">
+
+                        Install the latest version of Tic Insight to manage your
+                        daily task status, speech-to-text updates and activity tracking.
+
+                    </p>
+
+                    <div class="space-y-4">
+
+                        <div class="flex justify-between bg-white/10 rounded-xl px-5 py-4">
+
+                            <span class="text-gray-300">
+                                Version
+                            </span>
+
+                            <span class="text-white font-semibold">
+                                1.0.0
+                            </span>
+
+                        </div>
+
+                        <div class="flex justify-between bg-white/10 rounded-xl px-5 py-4">
+
+                            <span class="text-gray-300">
+                                Release Date
+                            </span>
+
+                            <span class="text-white font-semibold">
+                                30 July 2026
+                            </span>
+
+                        </div>
+
+                        <div class="flex justify-between bg-white/10 rounded-xl px-5 py-4">
+
+                            <span class="text-gray-300">
+                                APK Size
+                            </span>
+
+                            <span class="text-white font-semibold">
+                                42 MB
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <a href="/src/public/app-arm64-v8a-release.apk" download>
+
+                        <button
+                            class="mt-8 w-full py-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-semibold transition duration-300 shadow-lg hover:shadow-cyan-500/30">
+
+                            ⬇ Download APK
+
+                        </button>
+
+                    </a>
+
+                </div>
+
+                <!-- Right -->
+
+                <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-xl">
+
+                    <h2 class="text-2xl font-semibold text-white mb-5">
+
+                        Installation Guide
+
+                    </h2>
+
+                    <div class="space-y-4">
+
+                        <div class="bg-white/10 rounded-xl p-5">
+
+                            <h3 class="text-white font-semibold mb-2">
+
+                                Step 1
+
+                            </h3>
+
+                            <p class="text-gray-300">
+
+                                Download the APK using the button on the left.
+
+                            </p>
+
+                        </div>
+
+                        <div class="bg-white/10 rounded-xl p-5">
+
+                            <h3 class="text-white font-semibold mb-2">
+
+                                Step 2
+
+                            </h3>
+
+                            <p class="text-gray-300">
+
+                                Enable <b>Install Unknown Apps</b> from your Android settings.
+
+                            </p>
+
+                        </div>
+
+                        <div class="bg-white/10 rounded-xl p-5">
+
+                            <h3 class="text-white font-semibold mb-2">
+
+                                Step 3
+
+                            </h3>
+
+                            <p class="text-gray-300">
+
+                                Open the downloaded APK and complete the installation.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <!-- Release Notes -->
+
+            <div class="mt-10 backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+
+                <h2 class="text-2xl text-white font-semibold mb-5">
+
+                    What's New
+
+                </h2>
+
+                <ul class="space-y-3 text-gray-300 list-disc pl-5">
+
+                    <li>Improved speech-to-text accuracy.</li>
+
+                    <li>One-click Bengali → English translation.</li>
+
+                    <li>Task editing support.</li>
+
+                    <li>Performance improvements.</li>
+
+                    <li>Bug fixes and stability enhancements.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
