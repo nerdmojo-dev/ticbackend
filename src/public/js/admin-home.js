@@ -15,17 +15,25 @@ const limit = 5;
 
 let page = 1;
 
-function resetAndLoad(){
-    page=1;
+
+function resetAndLoad() {
+    page = 1;
     loadFiles();
+
 }
 
 async function loadFiles() {
 
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
+    const userId = document.getElementById("userFilter").value;
+    let url=`/api/v1/tasks/getAssignedTasks?page=${page}&offset=${limit}&startDate=${startDate}&endDate=${endDate}`
+    if (userId) {
+        url += `&userId=${encodeURIComponent(userId)}`;
+    }
+    console.log(url);
 
-    const response = await apiFetch(`/api/v1/tasks/getAssignedTasks?page=${page}&offset=${limit}&startDate=${startDate}&endDate=${endDate}`);
+    const response = await apiFetch(url);
 
     const data = await response.json();
     console.log(data);
@@ -120,6 +128,32 @@ async function exportExcel() {
 }
 
 
+async function loadUsers() {
+    const userFilter = document.getElementById("userFilter");
+
+    // Reset dropdown
+    userFilter.innerHTML = `<option value="">All Users</option>`;
+
+    try {
+        const response = await apiFetch(`/api/v1/auth/getUserList?page=1&offset=300`);
+        const body = await response.json();
+        // Adjust this depending on your API response structure
+        const users = body.data.userList;
+
+
+        users.forEach(user => {
+            const option = document.createElement("option");
+            option.value = user._id; // or user._id
+            option.textContent = user.fullName;
+            userFilter.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("Failed to load users:", err);
+    }
+}
+
+
 function renderTable(tasks) {
 
 
@@ -127,13 +161,13 @@ function renderTable(tasks) {
 
     tbody.innerHTML = "";
 
-    if (tasks!=null&&tasks.length > 0)
+    if (tasks != null && tasks.length > 0)
 
         tasks.forEach((task, index) => {
 
             tbody.innerHTML += `
             <tr class="border-b border-white/10 hover:bg-white/5">
-                <td class="px-6 py-4">${(index + 1)+(page-1)*limit}</td>
+                <td class="px-6 py-4">${(index + 1) + (page - 1) * limit}</td>
                 <td class="px-6 py-4">${task.createdBy.fullName}</td>
                 <td class="px-6 py-4">${task.title}</td>
                 <td class="px-6 py-4">${task.description}</td>
@@ -168,3 +202,4 @@ document.getElementById("prevBtn").onclick = () => {
 };
 
 loadFiles();
+loadUsers();

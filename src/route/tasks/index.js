@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/addtask", authMiddleware, async (req, res, next) => {
     try {
-        const { title, description, assignedTo, dueDate,status } = req.body;
+        const { title, description, assignedTo, dueDate, status } = req.body;
 
         // Validate required fields
         if (!title || !description || !assignedTo || !dueDate) {
@@ -37,8 +37,8 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
             title,
             description,
             assignedTo,
-            status: status??"Completed",
-            dueDate:dueDate,
+            status: status ?? "Completed",
+            dueDate: dueDate,
             createdBy: req.user._id,
         });
 
@@ -59,10 +59,15 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
         const offset = parseInt(req.query.offset) || 10;
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
+        const userId = req.query.userId;
+
         const filter = {};
 
         if (req.user.role !== "ADMIN") {
             filter.createdBy = req.user._id;
+        }
+        if(userId) {
+            filter.createdBy = userId;
         }
 
         if (startDate || endDate) {
@@ -138,7 +143,7 @@ router.post("/addComment", authMiddleware, async (req, res, next) => {
 router.put("/editTask/:taskId", authMiddleware, async (req, res, next) => {
     try {
         const { taskId } = req.params;
-        const { title, description,status } = req.body;
+        const { title, description, status } = req.body;
 
         // Validate required fields
         if (!title || !description) {
@@ -163,7 +168,7 @@ router.put("/editTask/:taskId", authMiddleware, async (req, res, next) => {
         task.title = title;
         task.description = description;
         task.isEdited = true;
-        task.status=status??"Completed";
+        task.status = status ?? "Completed";
 
         await task.save();
         await task.populate("createdBy");
