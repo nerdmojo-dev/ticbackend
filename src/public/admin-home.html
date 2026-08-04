@@ -110,61 +110,43 @@
 
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+            <div class="flex items-end justify-center gap-4 mb-6 flex-nowrap">
 
                 <!-- User -->
-                <div>
-                    <label class="block text-gray-300 text-sm mb-2">
-                        User
-                    </label>
-
-                    <select id="userFilter" class="w-full rounded-xl
-           bg-white/10 backdrop-blur-md
-           border border-white/20
-           text-black placeholder-gray-300
-           px-4 py-3
-           shadow-lg
-           outline-none
-           appearance-none
-           focus:ring-2 focus:ring-cyan-400
-           transition">
-
+                <div class="flex-1">
+                    <label class="block text-gray-300 text-sm mb-2">User</label>
+                    <select id="userFilter"
+                        class="w-full rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-black px-4 py-3 shadow-lg outline-none appearance-none focus:ring-2 focus:ring-cyan-400 transition">
                         <option value="">All Users</option>
                     </select>
                 </div>
 
                 <!-- Start Date -->
-                <div>
-                    <label class="block text-gray-300 text-sm mb-2">
-                        Start Date
-                    </label>
-
+                <div class="flex-1">
+                    <label class="block text-gray-300 text-sm mb-2">Start Date</label>
                     <input id="startDate" type="date"
                         class="w-full rounded-lg bg-white/10 border border-white/20 text-white px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-400">
                 </div>
 
                 <!-- End Date -->
-                <div>
-                    <label class="block text-gray-300 text-sm mb-2">
-                        End Date
-                    </label>
-
+                <div class="flex-1">
+                    <label class="block text-gray-300 text-sm mb-2">End Date</label>
                     <input id="endDate" type="date"
                         class="w-full rounded-lg bg-white/10 border border-white/20 text-white px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-400">
                 </div>
 
-                <!-- Apply Filter -->
-                <div class="flex items-end">
+                <!-- Apply -->
+                <div>
                     <button id="filterBtn" onclick="resetAndLoad()"
-                        class="w-full px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-white">
+                        class="px-6 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-white whitespace-nowrap">
                         Apply Filter
                     </button>
                 </div>
 
                 <!-- Export -->
-                <div class="flex items-end">
+                <div>
                     <button id="exportBtn"
-                        class="w-full px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white">
+                        class="px-6 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white whitespace-nowrap">
                         Export to Excel
                     </button>
                 </div>
