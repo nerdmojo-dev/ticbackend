@@ -303,7 +303,7 @@ router.get("/getUserList", authMiddleware, async (req, res, next) => {
         .sort({ fullName: 1 })
         .skip(skip)
         .limit(offset);
-    const countOfDocuments = await User.countDocuments();
+    const countOfDocuments = await User.countDocuments(filter);
 
 
     res.json(
