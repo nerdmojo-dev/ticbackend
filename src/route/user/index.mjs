@@ -282,13 +282,23 @@ router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
 
 
 router.get("/getUserList", authMiddleware, async (req, res, next) => {
+    const search = req.query.search?.trim();
     const page = parseInt(req.query.page) || 1;
     const offset = parseInt(req.query.offset) || 10;
     if (req.user.role !== "ADMIN") {
         throw new Error("Admin token required");
     }
     const skip = (page - 1) * offset;
-    const userList = await User.find()
+    const filter = {};
+
+    if (search) {
+        filter.$or = [
+            { employeeId: { $regex: search, $options: "i" } },
+            { fullName: { $regex: search, $options: "i" } },
+            { department: { $regex: search, $options: "i" } }
+        ];
+    }
+    const userList = await User.find(filter)
         .select(" +loginAttempts +accountLocked")
         .sort({ fullName: 1 })
         .skip(skip)

@@ -3,21 +3,39 @@ const today = new Date().toISOString().split("T")[0];
 
 
 
-
+let search = "";
 if (!isLoggedin) {
     window.location.href = "/admin/login";
 }
 
 
-const limit = 5;
+const limit = 60;
 
 let page = 1;
+
+let searchTimeout;
+
+document.getElementById("searchInput").addEventListener("input", (e) => {
+
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+
+        search = e.target.value.trim();
+        page = 1; // Reset to first page whenever searching
+        loadUsers();
+
+    }, 400);
+
+});
 
 
 async function loadUsers() {
 
 
-    const response = await apiFetch(`/api/v1/auth/getUserList?page=${page}&offset=${limit}`);
+    const response = await apiFetch(
+        `/api/v1/auth/getUserList?page=${page}&offset=${limit}&search=${encodeURIComponent(search)}`
+    );
 
     const data = await response.json();
     console.log(data);
