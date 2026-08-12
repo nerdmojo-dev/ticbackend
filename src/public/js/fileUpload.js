@@ -4,10 +4,6 @@ const dropZone = document.getElementById("dropZone");
 const fileName = document.getElementById("fileName");
 const downloadSampleBtn = document.getElementById("downloadSampleBtn");
 
-downloadSampleBtn.onclick = () => {
-    window.location.href = "/sample.csv";
-}
-
 browseBtn.onclick = () => {
     fileInput.click();
 }
