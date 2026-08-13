@@ -46,7 +46,7 @@ export default (app) => {
             __dirname,"../..",
             "src",
             "public",
-            "app-arm64-v8a-release.apk"
+            "app-release.apk"
         );
 
         res.download(filePath, "TicInsight.apk", (err) => {
