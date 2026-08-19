@@ -43,11 +43,12 @@ export default (app) => {
 
     app.get("/api/download/app", (req, res) => {
         const filePath = path.join(
-            __dirname,"../..",
+            __dirname, "../..",
             "src",
             "public",
             "app-release.apk"
         );
+        console.log("PDF path:", filePath);
 
         res.download(filePath, "TicInsight.apk", (err) => {
             if (err) {
@@ -56,6 +57,28 @@ export default (app) => {
                     res.status(404).json({
                         success: false,
                         message: "APK not found"
+                    });
+                }
+            }
+        });
+    });
+
+
+    app.get("/api/download/security-policy", (req, res) => {
+        const filePath = path.join(
+            __dirname, "../..",
+            "src",
+            "public",
+            "security.pdf"
+        );
+
+        res.download(filePath, "Security_policies.pdf", (err) => {
+            if (err) {
+                console.error(err);
+                if (!res.headersSent) {
+                    res.status(404).json({
+                        success: false,
+                        message: "PDF not found"
                     });
                 }
             }
