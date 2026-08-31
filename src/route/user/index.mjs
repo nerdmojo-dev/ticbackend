@@ -161,13 +161,13 @@ router.post("/loginUser",
             const token = jwt.sign(
                 { id: user._id, role: user.role, employeeId: user.employeeId, },
                 config.jwtSecret,
-                { expiresIn: "1h" }
+                { expiresIn: "2d" }
             );
 
             const refreshToken = jwt.sign(
                 { id: user._id, isRefreshToken: true },
                 config.jwtSecret,
-                { expiresIn: "7d" }
+                { expiresIn: "365d" }
             );
 
 
@@ -266,7 +266,7 @@ router.get("/getAccessToken", authMiddleware, async (req, res, next) => {
     const token = jwt.sign(
         { id: req.user._id, role: req.user.role, employeeId: req.user.employeeId, },
         config.jwtSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "2d" }
     );
 
     res.json(
