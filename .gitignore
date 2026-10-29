@@ -1,4 +1,6 @@
 node_modules/
+.env
 .env.*
+src/ticbackendapp.env.txt
 logs/
 ldap-docker/

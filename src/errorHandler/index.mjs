@@ -2,10 +2,10 @@ import ApplicationResponse from "../utils/ApplicationResponse.mjs";
 import logger from "../utils/logger.mjs";
 
 const errorHandler = (err, req, res, next) => {
-    logger.error(err);
+    logger.error(`Request failed: ${err.name || 'Error'}`);
 
     let statusCode = err.statusCode || 500;
-    let message = err.message || "Internal Server Error";
+    let message = statusCode >= 500 ? "Internal Server Error" : (err.message || "Request failed");
     let errors = null;
 
     // Mongoose Validation Error
@@ -45,7 +45,7 @@ const errorHandler = (err, req, res, next) => {
         message = "Token expired";
     }
 
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== "production" && statusCode < 500) {
         errors ??= {};
         errors.stack = err.stack;
     }

@@ -21,11 +21,24 @@ app.use(express.static(path.join(__dirname, "public")));
 routes(app);
 
 
-app.listen(config.port, () => {
-    console.log(config);
-    appLog(`Server is running on port ${config.port}`);
-    dbLog(`Initiating db connection...`);
-    connectDB();
+const server = app.listen(config.port, () => {
+    appLog(`Server is running on port ${config.port} (${process.env.NODE_ENV || 'development'})`);
+    dbLog('Connecting to MongoDB...');
 
+    connectDB().catch((error) => {
+        const cause = error?.cause || error;
+        const details = [cause.syscall, cause.code || error.code].filter(Boolean).join(' ');
+        console.error(`Startup failed: MongoDB connection could not be established${details ? ` (${details})` : ''}. Check Atlas DNS/network access and DB_URL.`);
+        server.close(() => process.exit(1));
+    });
+});
 
-})
+const shutdown = () => {
+    server.close(async () => {
+        const mongoose = (await import('mongoose')).default;
+        await mongoose.disconnect();
+        process.exit(0);
+    });
+};
+process.once('SIGINT', shutdown);
+process.once('SIGTERM', shutdown);

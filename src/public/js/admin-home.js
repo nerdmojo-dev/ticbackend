@@ -74,6 +74,7 @@ async function exportExcel() {
         const excelData = data.data?.tasks?.map((task, index) => ({
             "S.No": index + 1,
             "User": task.createdBy?.fullName || task.createdBy?._id,
+            "Department": task.createdBy?.department || "—",
             "Task": task.title,
             "Description": task.description,
             "Status": task.status,
@@ -168,17 +169,18 @@ function renderTable(tasks) {
             tbody.innerHTML += `
             <tr class="border-b border-white/10 hover:bg-white/5">
                 <td class="px-6 py-4">${(index + 1) + (page - 1) * limit}</td>
-                <td class="px-6 py-4">${task.createdBy.fullName}</td>
+                <td class="px-6 py-4">${task.createdBy?.fullName || "—"}</td>
+                <td class="px-6 py-4">${task.createdBy?.department || "—"}</td>
                 <td class="px-6 py-4">${task.title}</td>
                 <td class="px-6 py-4">${task.description}</td>
                 <td class="px-6 py-4">${task.dueDate.toString().split("T")[0]}</td>
-                <td class="px-6 py-4">${task.priority}</td>
+                <td class="px-6 py-4">${task.status}</td>
             </tr>
         `;
         });
     else {
         tbody.innerHTML += `
-        <td colspan="6" class="w-full py-3 col-span-full text-center text-gray-300 bg-white/5 rounded-lg">
+        <td colspan="7" class="w-full py-3 col-span-full text-center text-gray-300 bg-white/5 rounded-lg">
             No tasks present in system
         </td>
         

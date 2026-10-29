@@ -18,7 +18,6 @@ class EmailService {
     }
 
     async sendOtp(email, otp) {
-        console.log(`Sending OTP ${otp} to ${email}:"Nerdy Dev" <${config.smtp.username}>`);
         await this.transporter.sendMail({
             from: `"Nerdy Dev" <${config.smtp.username}>`,
             to: email,

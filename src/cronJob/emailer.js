@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
 import cron from 'node-cron';
-import dotenv from 'dotenv';
 import connectDB from '../utils/dbConn.mjs';
-dotenv.config();
 import path from 'node:path'
 import Task from '../models/task.mjs';
 import fs from 'fs/promises';
@@ -89,8 +87,6 @@ async function generateTodaysTaskReport() {
 
 
 
-console.log(process.env);
-
 async function sendMail() {
     const report = await generateTodaysTaskReport();
     
@@ -114,9 +110,9 @@ async function sendMail() {
             ],
         });
 
-        console.log("Mail sent:", info.messageId);
+        console.log("Mail sent successfully");
     } catch (err) {
-        console.error("Failed to send mail:", err);
+        console.error("Failed to send mail");
     } finally {
         if(report) await fs.unlink(report);
     }
