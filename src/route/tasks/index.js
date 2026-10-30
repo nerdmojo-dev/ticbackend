@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/addtask", authMiddleware, async (req, res, next) => {
     try {
-        const { title, description, assignedTo, dueDate, status } = req.body;
+        let { title, description, assignedTo, dueDate, status } = req.body;
 
         // Validate required fields
         if (!title || !description || !assignedTo || !dueDate) {
@@ -25,25 +25,44 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
 
         if (language === "ben") {
             try {
+                const body = {
+                    text: description,
+                    source: "bn",
+                    target: "en"
+                };
+
                 const response = await axios.post(
-                    "http://3.26.191.191:8000/translate",
+                    "http://18.159.230.26:8080/api/translate",
+                    body,
                     {
-                        text: description,
+                        timeout: 30000,
+                        headers: {
+                            "Authorization": `Bearer fe8be4f047e3bc2bd23a469ed5a8b92a58ec1fcedbf6b5501eee631c537b8074`,
+                            "Content-Type": "application/json"
+                        }
                     }
                 );
-                console.log("Translation response:", response.data);
-                description =
-                    response.data.translated;
 
-                if (!description) {
+                console.log("Translation response:", response.data);
+
+                const translatedText = response.data?.translation;
+
+                if (!translatedText || typeof translatedText !== "string") {
                     return res.status(502).json(
                         ApplicationResponse.error(
-                            "Some issue has occured"
+                            "Translation service returned an invalid response"
                         )
                     );
                 }
+
+                description = translatedText;
+
             } catch (error) {
-                console.error("Translation error:", error.message);
+                console.error("Translation error:", {
+                    message: error.message,
+                    status: error.response?.status,
+                    data: error.response?.data
+                });
 
                 return res.status(502).json(
                     ApplicationResponse.error(
@@ -51,10 +70,8 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
                     )
                 );
             }
-
-
         }
-        return res.status(200).json(ApplicationResponse.success(description, "Description translated successfully"));
+        // return res.status(200).json(ApplicationResponse.success(description, "Description translated successfully"));
 
 
         const startOfDay = new Date(dueDate);
