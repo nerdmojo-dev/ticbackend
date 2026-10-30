@@ -112,6 +112,76 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
 });
 
 
+router.post("/translate", async (req, res, next) => {
+    try {
+        let { text } = req.body;
+        const language = franc(text, {
+            minLength: 5
+        });
+
+        if (language !== "ben") {
+            return res.status(201).json({
+                "success": true,
+                "source": "bn",
+                "target": "en",
+                "translation": text
+            });
+        }
+        try {
+            const body = {
+                text,
+                source: "bn",
+                target: "en"
+            };
+
+            const response = await axios.post(
+                "http://18.159.230.26:8080/api/translate",
+                body,
+                {
+                    timeout: 30000,
+                    headers: {
+                        "Authorization": `Bearer fe8be4f047e3bc2bd23a469ed5a8b92a58ec1fcedbf6b5501eee631c537b8074`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            console.log("Translation response:", response.data);
+
+            const translatedText = response.data?.translation;
+
+            if (!translatedText || typeof translatedText !== "string") {
+                return res.status(502).json(
+                    ApplicationResponse.error(
+                        "Translation service returned an invalid response"
+                    )
+                );
+            }
+
+            return res.status(200).json(response.data);
+
+        } catch (error) {
+            console.error("Translation error:", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data
+            });
+
+            return res.status(502).json(
+                ApplicationResponse.error(
+                    "Unable to translate description"
+                )
+            );
+        }
+
+
+    } catch (error) {
+        serverLog("Error translating task:", error);
+        next(error);
+    }
+});
+
+
 router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
