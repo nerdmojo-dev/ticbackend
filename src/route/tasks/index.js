@@ -4,6 +4,9 @@ import { dbLog, serverLog } from "../../utils/logHelper.mjs";
 import express from "express";
 import authMiddleware from "../../middleware/authMiddleware.mjs";
 import Task from "../../models/task.mjs";
+import { franc } from "franc-min";
+import axios from "axios";
+
 
 const router = express.Router();
 
@@ -15,6 +18,45 @@ router.post("/addtask", authMiddleware, async (req, res, next) => {
         if (!title || !description || !assignedTo || !dueDate) {
             return res.status(400).json(ApplicationResponse.error("All fields are required"));
         }
+
+        const language = franc(description, {
+            minLength: 5
+        });
+
+        if (language === "ben") {
+            try {
+                const response = await axios.post(
+                    "http://3.26.191.191:8000/translate",
+                    {
+                        text: description,
+                    }
+                );
+                console.log("Translation response:", response.data);
+                description =
+                    response.data.translated;
+
+                if (!description) {
+                    return res.status(502).json(
+                        ApplicationResponse.error(
+                            "Some issue has occured"
+                        )
+                    );
+                }
+            } catch (error) {
+                console.error("Translation error:", error.message);
+
+                return res.status(502).json(
+                    ApplicationResponse.error(
+                        "Unable to translate description"
+                    )
+                );
+            }
+
+
+        }
+        return res.status(200).json(ApplicationResponse.success(description, "Description translated successfully"));
+
+
         const startOfDay = new Date(dueDate);
         startOfDay.setHours(0, 0, 0, 0);
 
@@ -66,7 +108,7 @@ router.get("/getAssignedTasks", authMiddleware, async (req, res, next) => {
         if (req.user.role !== "ADMIN") {
             filter.createdBy = req.user._id;
         }
-        if(userId) {
+        if (userId) {
             filter.createdBy = userId;
         }
 
